@@ -1,9 +1,7 @@
 import mongoose from 'mongoose';
 require('dotenv').config();
 
-const dbUrl: string =
-  
-  "mongodb+srv://bereketdinku:beki1234@cluster0.a7un02o.mongodb.net/lms";
+const dbUrl: string = process.env.MONGO_URI || "";
 
 const connectDB = async () => {
     try {

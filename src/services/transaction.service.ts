@@ -8,9 +8,7 @@ dotenv.config();
 
 
 
-const stripe = new Stripe(
-  "sk_test_51PjHqORsDdhfuZ8NjF0KchE1pj5KcihMgMVXHOKHGifhg6OxajDomWttIguXn9qntuQzUTKiNM4fvI3hzORr0qU800IGTW2AEt"
-);
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 // Service to list transactions, optionally filtered by userId
 export const listTransactionsService = async (userId?: string) => {
