@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-     "build": "node -e \"const fs = require('fs'); fs.rmSync('dist', { recursive: true, force: true });\" && npx tsc",
+     "build": "rimraf dist && npx tsc",
     "start": "npm run build && node dist/index.js",
     "dev": "npm run build && concurrently \"npx tsc -w\" \" nodemon --exec ts-node src/index.ts\" ",
     "seed": "ts-node src/seed/seedDynamodb.ts"
@@ -28,7 +28,9 @@
     "morgan": "^1.10.0",
     "pluralize": "^8.0.0",
     "stripe": "^17.4.0",
-    "uuid": "^11.0.3"
+    "uuid": "^11.0.3",
+    "rimraf": "^6.0.1",
+    "typescript": "^5.7.2"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
