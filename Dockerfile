@@ -1,41 +1,23 @@
-# Use an official Node.js image as a base
-FROM node:20 AS build
+# Use an official Node.js runtime as a parent image
+FROM node:18-alpine
 
-# Set working directory
+# Set the working directory in the container
 WORKDIR /app
 
-# Copy package.json and package-lock.json (if present) and install dependencies
+# Copy package.json and package-lock.json to the container
 COPY package*.json ./
-RUN npm install --unsafe-perm
 
-# Fix permissions for node_modules/.bin
-RUN  chmod -R a+x /app/node_modules
+# Install dependencies
+RUN npm install
 
-# Copy the rest of the application files
+# Copy the source code into the container
 COPY . .
 
-# Build the application
+# Build the TypeScript project
 RUN npm run build
 
-# Prune unnecessary packages for production
-RUN npm prune --production
-
-# Start from a fresh Node.js image for the production environment
-FROM node:20
-
-# Set working directory for the app
-WORKDIR /app
-
-# Copy the build output and dependencies from the build stage
-COPY --from=build /app/dist /app/dist
-COPY --from=build /app/node_modules /app/node_modules
-COPY --from=build /app/package*.json /app/
-
-# Set environment variables
-ENV NODE_ENV=production
-
-# Expose the port your app will run on
+# Expose the application port
 EXPOSE 3000
 
-# Start the application (use your own entry point if different)
-CMD ["node", "dist/index.js"]
+# Set the command to run the app
+CMD ["npm", "start"]
