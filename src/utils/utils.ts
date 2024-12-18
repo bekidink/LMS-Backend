@@ -1,4 +1,6 @@
 import path from "path";
+import { SectionProgress } from "../models/userCourseProgressModel";
+import mongoose from "mongoose";
 
 export const updateCourseVideoInfo = (
   course: any,
@@ -94,27 +96,39 @@ export const handleAdvancedVideoUpload = async (
 };
 
 export const mergeSections = (
-  existingSections: any[],
-  newSections: any[]
-): any[] => {
-  const existingSectionsMap = new Map<string, any>();
-  for (const existingSection of existingSections) {
-    existingSectionsMap.set(existingSection.sectionId, existingSection);
-  }
+  existingSections: SectionProgress[] | mongoose.Types.Array<SectionProgress>,
+  newSections: SectionProgress[]
+): SectionProgress[] => {
+  // If existingSections is a Mongoose DocumentArray, convert it to a plain array
+  const existingSectionsArray =
+    existingSections instanceof mongoose.Types.Array
+      ? existingSections.map((doc) => doc.toObject()) // Convert to plain object
+      : existingSections;
 
-  for (const newSection of newSections) {
-    const section = existingSectionsMap.get(newSection.sectionId);
-    if (!section) {
-      // Add new section
-      existingSectionsMap.set(newSection.sectionId, newSection);
-    } else {
-      // Merge chapters within the existing section
-      section.chapters = mergeChapters(section.chapters, newSection.chapters);
-      existingSectionsMap.set(newSection.sectionId, section);
+  const sections = existingSectionsArray.map((existingSection) => {
+    const matchingNewSection = newSections.find(
+      (newSection) => newSection.sectionId === existingSection.sectionId
+    );
+
+    if (matchingNewSection) {
+      // Merge chapters from the matching section
+      existingSection.chapters = matchingNewSection.chapters;
     }
-  }
 
-  return Array.from(existingSectionsMap.values());
+    return existingSection;
+  });
+
+  // Add new sections that do not exist in existingSections
+  newSections.forEach((newSection) => {
+    const exists = existingSectionsArray.some(
+      (section) => section.sectionId === newSection.sectionId
+    );
+    if (!exists) {
+      sections.push(newSection); // Add new section
+    }
+  });
+
+  return sections;
 };
 
 export const mergeChapters = (

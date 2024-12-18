@@ -1,5 +1,310 @@
 [
   {
+  "courseId": "f1b8a2d3-e1b9-4d9f-9c9e-8d2c7b0f4d3a",
+  "teacherId": "user_3bFh29BvJlX2YkP5W1Us3DxZyV",
+  "teacherName": "Dr. Emma Thompson",
+  "title": "Medical Terminology for Beginners",
+  "description": "Get familiar with the fundamental medical terms and their applications in healthcare.",
+  "category": "Healthcare",
+  "image": "https://images.pexels.com/photos/416161/pexels-photo-416161.jpeg",
+  "price": 2499,
+  "level": "Beginner",
+  "status": "Published",
+  "enrollments": [
+    { "userId": "user_5kLw7m7t8O1XqY4Z9V0bN3Kf2" },
+    { "userId": "user_8sLm6N3vF1Jb3X7k2T3yD8V1A" }
+  ],
+  "sections": [
+    {
+      "sectionId": "9f4d1a3b-6c2d-4f7e-8a0d-2c6d7e9f5f8d",
+      "sectionTitle": "Introduction to Medical Terminology",
+      "sectionDescription": "Learn the basics of medical terminology and its importance in healthcare.",
+      "chapters": [
+        {
+          "chapterId": "d3b8c2d7-9b5e-4a3f-b6f2-1c4a3e8b2a1d",
+          "type": "Video",
+          "title": "What is Medical Terminology?",
+          "content": "https://example.com/videos/medical-terminology.mp4",
+          "video": "https://example.com/videos/medical-terminology.mp4",
+          "comments": []
+        },
+        {
+          "chapterId": "e3b4c7d5-8a3f-4d1b-b9f2-1f5b9a3c2f5e",
+          "type": "Text",
+          "title": "Common Prefixes and Suffixes",
+          "content": "Learn about commonly used medical prefixes and suffixes that help in understanding medical terms.",
+          "comments": []
+        },
+        {
+          "chapterId": "f8e2a7b9-3c7e-5d1f-6b2c-9b1d8f9e0c3a",
+          "type": "Quiz",
+          "title": "Medical Terminology Quiz",
+          "content": "1. What does the prefix 'hypo' mean?\n2. What does the suffix '-itis' indicate?\n3. Name two common medical abbreviations.",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "sectionId": "7a4f9b1e-1c3b-5a6d-2e9c-8d0f2a4b7e1b",
+      "sectionTitle": "Anatomy and Physiology Basics",
+      "sectionDescription": "Explore the foundational concepts of human anatomy and physiology.",
+      "chapters": [
+        {
+          "chapterId": "b1a9c7d6-5f2e-3a7b-9e1d-3c9a2b6d8f0f",
+          "type": "Video",
+          "title": "Introduction to Human Anatomy",
+          "content": "https://example.com/videos/human-anatomy.mp4",
+          "video": "https://example.com/videos/human-anatomy.mp4",
+          "comments": []
+        },
+        {
+          "chapterId": "c5f7d9e0-b2a8-4f1e-b3c7-d2a5f1b2c0a9",
+          "type": "Text",
+          "title": "The Circulatory System",
+          "content": "Learn about the components and functions of the human circulatory system.",
+          "comments": []
+        },
+        {
+          "chapterId": "d3f8a7b9-5d6e-2c8f-1a3b-9f9e7c6b1c0a",
+          "type": "Quiz",
+          "title": "Anatomy and Physiology Quiz",
+          "content": "1. What is the largest organ in the human body?\n2. Name the main organs of the circulatory system.\n3. What is the role of red blood cells?",
+          "comments": []
+        }
+      ]
+    }
+  ]
+},
+{
+  "courseId": "c2d1a3e8-7f5b-4c3e-8d1e-4f8b1a7c9e2d",
+  "teacherId": "user_1dNf3XwRkJd7Fg4Z9D0v4T6c6B",
+  "teacherName": "Dr. Robert Harris",
+  "title": "Introduction to Medical Ethics",
+  "description": "Understand the basic principles of medical ethics and their application in healthcare settings.",
+  "category": "Healthcare",
+  "image": "https://images.pexels.com/photos/3933245/pexels-photo-3933245.jpeg",
+  "price": 2999,
+  "level": "Intermediate",
+  "status": "Published",
+  "enrollments": [
+    { "userId": "user_3gL9n0M5t8R1B6u0D2F9v9Z4t8" },
+    { "userId": "user_1w3L9h4E5r8J2d7T1A4B3Y9c" }
+  ],
+  "sections": [
+    {
+      "sectionId": "4f2b5c1d-6a8e-3c4f-9b2d-1a7d2c0b4e5a",
+      "sectionTitle": "Ethical Principles in Medicine",
+      "sectionDescription": "Learn the key ethical principles applied in the medical field.",
+      "chapters": [
+        {
+          "chapterId": "g7b6c3d5-a1b2-9f8a-7d4c-3a1b9e0d8f9d",
+          "type": "Video",
+          "title": "The Four Pillars of Medical Ethics",
+          "content": "https://example.com/videos/four-pillars.mp4",
+          "video": "https://example.com/videos/four-pillars.mp4",
+          "comments": []
+        },
+        {
+          "chapterId": "a3b9f6c7-4d1e-3a8b-9f0c-2b1c6d7e9f9f",
+          "type": "Text",
+          "title": "Informed Consent",
+          "content": "Understanding the importance of informed consent in medical practice.",
+          "comments": []
+        },
+        {
+          "chapterId": "b7e2a8c3-5f1d-3b2c-1a9b-2e5f4b7d8f9b",
+          "type": "Quiz",
+          "title": "Medical Ethics Quiz",
+          "content": "1. What is the principle of autonomy?\n2. Explain the role of confidentiality in healthcare.\n3. How does beneficence relate to patient care?",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "sectionId": "2f6e1d3c-4b9d-8a7f-9b2c-4e1d6a7f9e8d",
+      "sectionTitle": "Medical Decision-Making",
+      "sectionDescription": "Explore the ethical considerations involved in medical decision-making.",
+      "chapters": [
+        {
+          "chapterId": "c3a7e1d2-9b5f-4a3c-b8d2-5f6a3b2c7d8f",
+          "type": "Video",
+          "title": "Making Ethical Medical Decisions",
+          "content": "https://example.com/videos/ethical-decisions.mp4",
+          "video": "https://example.com/videos/ethical-decisions.mp4",
+          "comments": []
+        },
+        {
+          "chapterId": "a8d2f5b3-c9a6-2d7e-3b1c-4e2b8a7c9e5e",
+          "type": "Text",
+          "title": "The Role of Doctors in Ethical Dilemmas",
+          "content": "A discussion of the role of doctors when facing ethical dilemmas in practice.",
+          "comments": []
+        },
+        {
+          "chapterId": "b9c5d3e2-a7b1-6c2f-3b4e-7c0b1d6e8c2f",
+          "type": "Quiz",
+          "title": "Medical Decision-Making Quiz",
+          "content": "1. What is paternalism in medical decision-making?\n2. Describe the concept of distributive justice in healthcare.\n3. Why is patient autonomy important?",
+          "comments": []
+        }
+      ]
+    }
+  ]
+},
+{
+  "courseId": "a1b2c3d4-e5f6-7g8h-9i0j-k1l2m3n4o5p6",
+  "teacherId": "user_2xD9t3B6Z2D1W4N5P3B6X1V7E",
+  "teacherName": "Dr. Sarah Mitchell",
+  "title": "Pharmacology and Drug Interactions",
+  "description": "Understand the basics of pharmacology, drug classifications, and how drugs interact with each other.",
+  "category": "Healthcare",
+  "image": "https://images.pexels.com/photos/3953385/pexels-photo-3953385.jpeg",
+  "price": 3499,
+  "level": "Intermediate",
+  "status": "Published",
+  "enrollments": [
+    { "userId": "user_5gH3p6Q2J9B1T4L7V2F6C1N9M0" },
+    { "userId": "user_7f9Y2K8P6R0V5N7Z3E3C1H4X" }
+  ],
+  "sections": [
+    {
+      "sectionId": "e1a2b3c4-7d8e-4f9a-9f6e-2g5f8h3i4j0k",
+      "sectionTitle": "Introduction to Pharmacology",
+      "sectionDescription": "Learn the key concepts in pharmacology, including drug classifications and therapeutic uses.",
+      "chapters": [
+        {
+          "chapterId": "h2a3c1d4-b5e6-7f8a-2g4d-3i5e6f7g8h9i",
+          "type": "Video",
+          "title": "Basic Pharmacology Concepts",
+          "content": "https://example.com/videos/pharmacology-basics.mp4",
+          "video": "https://example.com/videos/pharmacology-basics.mp4",
+          "comments": []
+        },
+        {
+          "chapterId": "i2b5d4c6-f2a7-8d0b-9c1e-3f8b1g6h7j9k",
+          "type": "Text",
+          "title": "Drug Classes and Their Uses",
+          "content": "Explore various drug classes, their mechanisms of action, and common therapeutic uses.",
+          "comments": []
+        },
+        {
+          "chapterId": "j5a9c7d6-b3e8-6g5b-1f9d-8c4e0a6g3i7g",
+          "type": "Quiz",
+          "title": "Pharmacology Quiz",
+          "content": "1. What is the difference between analgesics and anesthetics?\n2. Name two types of antibiotics.\n3. What are the main uses of beta-blockers?",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "sectionId": "k4d2b3c5-8f7e-6g9h-2i1j-0l5k6n8m9o",
+      "sectionTitle": "Drug Interactions and Side Effects",
+      "sectionDescription": "Learn how drugs interact with each other and the potential side effects.",
+      "chapters": [
+        {
+          "chapterId": "m1f8c2g5-a3d9-7b4e-2h6j-3i4k9l8b5j0f",
+          "type": "Video",
+          "title": "Understanding Drug Interactions",
+          "content": "https://example.com/videos/drug-interactions.mp4",
+          "video": "https://example.com/videos/drug-interactions.mp4",
+          "comments": []
+        },
+        {
+          "chapterId": "p9a6e3d7-b8f5-6c2d-1g9i-0h7f8k3l2j9h",
+          "type": "Text",
+          "title": "Common Drug Interactions",
+          "content": "Learn about common drug interactions and how they affect patient safety.",
+          "comments": []
+        },
+        {
+          "chapterId": "q8a5b7c2-d9f0-3g4h-2j7i-1k9l4b8g3i7j",
+          "type": "Quiz",
+          "title": "Drug Interactions and Side Effects Quiz",
+          "content": "1. What is an example of a drug-food interaction?\n2. What are the side effects of opioids?\n3. How can drug interactions impact patient treatment?",
+          "comments": []
+        }
+      ]
+    }
+  ]
+},
+{
+  "courseId": "m5n7o6p2-e4f1g9h8-i0j7k6l2m4n5",
+  "teacherId": "user_3hG1b4V6Y3F5J8L2M1N9Q7C5P",
+  "teacherName": "Dr. George Brown",
+  "title": "Cardiovascular Diseases and Treatment",
+  "description": "This course covers the types, causes, and treatments for cardiovascular diseases.",
+  "category": "Healthcare",
+  "image": "https://images.pexels.com/photos/289333/pexels-photo-289333.jpeg",
+  "price": 4299,
+  "level": "Advanced",
+  "status": "Published",
+  "enrollments": [
+    { "userId": "user_9b2T8F5W1C7P3X8Q0V5N6M2Z1" },
+    { "userId": "user_7g9D6L1K5P0Y3X1N4V8F2L9R" }
+  ],
+  "sections": [
+    {
+      "sectionId": "a5b7d8c2-4e3f-2g1h-6j7i-8k9l0m3n9o",
+      "sectionTitle": "Types of Cardiovascular Diseases",
+      "sectionDescription": "Explore the various types of cardiovascular diseases and their symptoms.",
+      "chapters": [
+        {
+          "chapterId": "g1h2b7f3-a8c9-2d4e-9f0j-6k2g5f1h8j",
+          "type": "Video",
+          "title": "Overview of Cardiovascular Diseases",
+          "content": "https://example.com/videos/cardiovascular-diseases.mp4",
+          "video": "https://example.com/videos/cardiovascular-diseases.mp4",
+          "comments": []
+        },
+        {
+          "chapterId": "h6b1d5f2-e3c7-8g9d-2j4i-1k5f7h8g9j",
+          "type": "Text",
+          "title": "Coronary Artery Disease",
+          "content": "Learn about coronary artery disease, its risk factors, and symptoms.",
+          "comments": []
+        },
+        {
+          "chapterId": "i9d3c8b4-e5f6-7g1j-2i4d-3k2h9b7f6c1a",
+          "type": "Quiz",
+          "title": "Cardiovascular Disease Types Quiz",
+          "content": "1. What are the primary causes of coronary artery disease?\n2. What are the symptoms of heart failure?\n3. What is arrhythmia?",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "sectionId": "d3b9c2f7-8e5f-6g1i-4j3k-7l0m9n2o8p",
+      "sectionTitle": "Cardiovascular Disease Treatment Options",
+      "sectionDescription": "Learn the different treatments available for cardiovascular diseases, including medical and surgical options.",
+      "chapters": [
+        {
+          "chapterId": "k1a5b2e7-f4c6-8g9d-3h1i-2j9f3c4k2j8",
+          "type": "Video",
+          "title": "Medical Treatment for Cardiovascular Diseases",
+          "content": "https://example.com/videos/cv-disease-treatment.mp4",
+          "video": "https://example.com/videos/cv-disease-treatment.mp4",
+          "comments": []
+        },
+        {
+          "chapterId": "n3c7d8b2-f5g4-9i1j-2h7k-4d6i9b8a9f0",
+          "type": "Text",
+          "title": "Surgical Interventions",
+          "content": "Explore various surgical treatments for cardiovascular diseases, such as bypass surgery.",
+          "comments": []
+        },
+        {
+          "chapterId": "o8a9d7e5-f2b4-3g6h-1i7j-9k3l4b2d1j0",
+          "type": "Quiz",
+          "title": "Cardiovascular Treatment Quiz",
+          "content": "1. What are common medications used to treat hypertension?\n2. Describe the procedure of angioplasty.\n3. How does lifestyle change impact cardiovascular health?",
+          "comments": []
+        }
+      ]
+    }
+  ]
+}
+,
+  {
     "courseId": "3a9f3d6c-c391-4b1c-9c3d-6c3f3d6c3f3d",
     "teacherId": "user_7kFh92JkCpQw3N8M5L4xRzVtYs",
     "teacherName": "John Doe",

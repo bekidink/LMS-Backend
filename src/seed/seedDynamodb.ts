@@ -1,133 +1,109 @@
-import {
-  DynamoDBClient,
-  DeleteTableCommand,
-  ListTablesCommand,
-} from "@aws-sdk/client-dynamodb";
+import mongoose from "mongoose";
 import fs from "fs";
 import path from "path";
-import dynamoose from "dynamoose";
-import pluralize from "pluralize";
-import Transaction from "../models/transactionModel";
-import Course from "../models/courseModel";
-import UserCourseProgress from "../models/userCourseProgressModel";
 import dotenv from "dotenv";
-
+import pluralize from "pluralize";
+// import { Transaction, Course, UserCourseProgress } from "../models";
+import Transaction from "../models/transactionModel"
+import Course from "../models/courseModel"
+import UserCourseProgress from "../models/userCourseProgressModel"
 dotenv.config();
-let client: DynamoDBClient;
 
-/* DynamoDB Configuration */
 const isProduction = process.env.NODE_ENV === "production";
+const mongoURI =  process.env.MONGO_URI
+  // : "mongodb+srv://bereketdinku:beki1234@cluster0.a7un02o.mongodb.net/lms";
 
-if (!isProduction) {
-  dynamoose.aws.ddb.local();
-  client = new DynamoDBClient({
-    endpoint: "http://localhost:8000",
-    region: "us-east-2",
-    credentials: {
-      accessKeyId: "dummyKey123",
-      secretAccessKey: "dummyKey123",
-    },
-  });
-} else {
-  client = new DynamoDBClient({
-    region: process.env.AWS_REGION || "us-east-2",
-  });
-}
+mongoose.set("strictQuery", false);
 
-/* DynamoDB Suppress Tag Warnings */
-const originalWarn = console.warn.bind(console);
-console.warn = (message, ...args) => {
-  if (
-    !message.includes("Tagging is not currently supported in DynamoDB Local")
-  ) {
-    originalWarn(message, ...args);
-  }
-};
-
-async function createTables() {
-  const models = [Transaction, UserCourseProgress, Course];
-
-  for (const model of models) {
-    const tableName = model.name;
-    const table = new dynamoose.Table(tableName, [model], {
-      create: true,
-      update: true,
-      waitForActive: true,
-      throughput: { read: 5, write: 5 },
-    });
-
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      await table.initialize();
-      console.log(`Table created and initialized: ${tableName}`);
-    } catch (error: any) {
-      console.error(
-        `Error creating table ${tableName}:`,
-        error.message,
-        error.stack
-      );
-    }
-  }
-}
-
-async function seedData(tableName: string, filePath: string) {
-  const data: { [key: string]: any }[] = JSON.parse(
-    fs.readFileSync(filePath, "utf8")
-  );
-
-  const formattedTableName = pluralize.singular(
-    tableName.charAt(0).toUpperCase() + tableName.slice(1)
-  );
-
-  console.log(`Seeding data to table: ${formattedTableName}`);
-
-  for (const item of data) {
-    try {
-      await dynamoose.model(formattedTableName).create(item);
-    } catch (err) {
-      console.error(
-        `Unable to add item to ${formattedTableName}. Error:`,
-        JSON.stringify(err, null, 2)
-      );
-    }
-  }
-
-  console.log(
-    "\x1b[32m%s\x1b[0m",
-    `Successfully seeded data to table: ${formattedTableName}`
-  );
-}
-
-async function deleteTable(baseTableName: string) {
-  let deleteCommand = new DeleteTableCommand({ TableName: baseTableName });
+// MongoDB connection handler
+async function connectToMongoDB(): Promise<void> {
   try {
-    await client.send(deleteCommand);
-    console.log(`Table deleted: ${baseTableName}`);
-  } catch (err: any) {
-    if (err.name === "ResourceNotFoundException") {
-      console.log(`Table does not exist: ${baseTableName}`);
+    await mongoose.connect(mongoURI!);
+    console.log("Connected to MongoDB");
+  } catch (error) {
+    console.error("Error connecting to MongoDB:", error);
+    process.exit(1); // Exit process if connection fails
+  }
+}
+
+// Create collections for models
+async function createCollections(): Promise<void> {
+  const models = [Transaction, UserCourseProgress, Course];
+  for (const model of models) {
+    const collectionName = model.collection.name;
+    const exists = await mongoose.connection.db
+      ?.listCollections({ name: collectionName })
+      .hasNext();
+
+    if (!exists) {
+      await model.createCollection();
+      console.log(`Collection created: ${collectionName}`);
     } else {
-      console.error(`Error deleting table ${baseTableName}:`, err);
+      console.log(`Collection already exists: ${collectionName}`);
     }
   }
 }
 
-async function deleteAllTables() {
-  const listTablesCommand = new ListTablesCommand({});
-  const { TableNames } = await client.send(listTablesCommand);
+// Seed data into collection
+async function seedData(
+  collectionName: string,
+  filePath: string
+): Promise<void> {
+  try {
+    const data = JSON.parse(fs.readFileSync(filePath, "utf8"));
+    const formattedCollectionName = pluralize.singular(
+      collectionName.charAt(0).toUpperCase() + collectionName.slice(1)
+    );
+    const model = mongoose.models[formattedCollectionName];
 
-  if (TableNames && TableNames.length > 0) {
-    for (const tableName of TableNames) {
-      await deleteTable(tableName);
-      await new Promise((resolve) => setTimeout(resolve, 800));
+    if (!model) {
+      throw new Error(
+        `Model not found for collection: ${formattedCollectionName}`
+      );
     }
+
+    await model.insertMany(data);
+    console.log(
+      `Successfully seeded data to collection: ${formattedCollectionName}`
+    );
+  } catch (error) {
+    console.error(
+      `Unable to seed data to collection: ${collectionName}`,
+      error
+    );
   }
 }
 
-export default async function seed() {
-  await deleteAllTables();
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-  await createTables();
+// Delete all collections
+async function deleteAllCollections(): Promise<void> {
+  try {
+    const db = mongoose.connection.db;
+    const collections = (await db?.listCollections().toArray()) ?? [];
+
+    if (collections.length === 0) {
+      console.log("No collections found to delete.");
+      return;
+    }
+
+    for (const collection of collections) {
+      try {
+        await db?.dropCollection(collection.name);
+        console.log(`Collection deleted: ${collection.name}`);
+      } catch (error) {
+        console.error(`Error deleting collection ${collection.name}:`, error);
+      }
+    }
+    console.log("All collections deleted successfully.");
+  } catch (error) {
+    console.error("Error deleting collections:", error);
+  }
+}
+
+// Main seeding function
+async function seed() {
+  await connectToMongoDB();
+  await deleteAllCollections();
+  await createCollections();
 
   const seedDataPath = path.join(__dirname, "./data");
   const files = fs
@@ -135,14 +111,20 @@ export default async function seed() {
     .filter((file) => file.endsWith(".json"));
 
   for (const file of files) {
-    const tableName = path.basename(file, ".json");
+    const collectionName = path.basename(file, ".json");
     const filePath = path.join(seedDataPath, file);
-    await seedData(tableName, filePath);
+    await seedData(collectionName, filePath);
   }
+
+  console.log("Seed script completed successfully.");
 }
 
+// Execute seed script
 if (require.main === module) {
-  seed().catch((error) => {
-    console.error("Failed to run seed script:", error);
-  });
+  seed()
+    .then(() => mongoose.disconnect())
+    .catch((error) => {
+      console.error("Failed to run seed script:", error);
+      mongoose.disconnect();
+    });
 }

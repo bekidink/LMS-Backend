@@ -1,5 +1,8 @@
-import { Schema, model } from "dynamoose";
+import mongoose from "mongoose";
 
+const { Schema, model } = mongoose;
+
+// Comment Schema
 const commentSchema = new Schema({
   commentId: {
     type: String,
@@ -19,6 +22,7 @@ const commentSchema = new Schema({
   },
 });
 
+// Chapter Schema
 const chapterSchema = new Schema({
   chapterId: {
     type: String,
@@ -37,15 +41,13 @@ const chapterSchema = new Schema({
     type: String,
     required: true,
   },
-  comments: {
-    type: Array,
-    schema: [commentSchema],
-  },
+  comments: [commentSchema],
   video: {
     type: String,
   },
 });
 
+// Section Schema
 const sectionSchema = new Schema({
   sectionId: {
     type: String,
@@ -58,18 +60,24 @@ const sectionSchema = new Schema({
   sectionDescription: {
     type: String,
   },
-  chapters: {
-    type: Array,
-    schema: [chapterSchema],
+  chapters: [chapterSchema],
+});
+
+// Enrollment Schema
+const enrollmentSchema = new Schema({
+  userId: {
+    type: String,
+    required: true,
   },
 });
 
+// Course Schema
 const courseSchema = new Schema(
   {
     courseId: {
       type: String,
-      hashKey: true,
       required: true,
+      unique: true,
     },
     teacherId: {
       type: String,
@@ -98,34 +106,22 @@ const courseSchema = new Schema(
     },
     level: {
       type: String,
-      required: true,
       enum: ["Beginner", "Intermediate", "Advanced"],
+      required: true,
     },
     status: {
       type: String,
-      required: true,
       enum: ["Draft", "Published"],
+      required: true,
     },
-    sections: {
-      type: Array,
-      schema: [sectionSchema],
-    },
-    enrollments: {
-      type: Array,
-      schema: [
-        new Schema({
-          userId: {
-            type: String,
-            required: true,
-          },
-        }),
-      ],
-    },
+    sections: [sectionSchema],
+    enrollments: [enrollmentSchema],
   },
   {
     timestamps: true,
   }
 );
 
+// Create and export the Course model
 const Course = model("Course", courseSchema);
 export default Course;

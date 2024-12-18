@@ -1,7 +1,12 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const dynamoose_1 = require("dynamoose");
-const commentSchema = new dynamoose_1.Schema({
+const mongoose_1 = __importDefault(require("mongoose"));
+const { Schema, model } = mongoose_1.default;
+// Comment Schema
+const commentSchema = new Schema({
     commentId: {
         type: String,
         required: true,
@@ -19,7 +24,8 @@ const commentSchema = new dynamoose_1.Schema({
         required: true,
     },
 });
-const chapterSchema = new dynamoose_1.Schema({
+// Chapter Schema
+const chapterSchema = new Schema({
     chapterId: {
         type: String,
         required: true,
@@ -37,15 +43,13 @@ const chapterSchema = new dynamoose_1.Schema({
         type: String,
         required: true,
     },
-    comments: {
-        type: Array,
-        schema: [commentSchema],
-    },
+    comments: [commentSchema],
     video: {
         type: String,
     },
 });
-const sectionSchema = new dynamoose_1.Schema({
+// Section Schema
+const sectionSchema = new Schema({
     sectionId: {
         type: String,
         required: true,
@@ -57,16 +61,21 @@ const sectionSchema = new dynamoose_1.Schema({
     sectionDescription: {
         type: String,
     },
-    chapters: {
-        type: Array,
-        schema: [chapterSchema],
+    chapters: [chapterSchema],
+});
+// Enrollment Schema
+const enrollmentSchema = new Schema({
+    userId: {
+        type: String,
+        required: true,
     },
 });
-const courseSchema = new dynamoose_1.Schema({
+// Course Schema
+const courseSchema = new Schema({
     courseId: {
         type: String,
-        hashKey: true,
         required: true,
+        unique: true,
     },
     teacherId: {
         type: String,
@@ -95,31 +104,19 @@ const courseSchema = new dynamoose_1.Schema({
     },
     level: {
         type: String,
-        required: true,
         enum: ["Beginner", "Intermediate", "Advanced"],
+        required: true,
     },
     status: {
         type: String,
-        required: true,
         enum: ["Draft", "Published"],
+        required: true,
     },
-    sections: {
-        type: Array,
-        schema: [sectionSchema],
-    },
-    enrollments: {
-        type: Array,
-        schema: [
-            new dynamoose_1.Schema({
-                userId: {
-                    type: String,
-                    required: true,
-                },
-            }),
-        ],
-    },
+    sections: [sectionSchema],
+    enrollments: [enrollmentSchema],
 }, {
     timestamps: true,
 });
-const Course = (0, dynamoose_1.model)("Course", courseSchema);
+// Create and export the Course model
+const Course = model("Course", courseSchema);
 exports.default = Course;

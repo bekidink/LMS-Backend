@@ -1,16 +1,19 @@
-import { Schema, model } from "dynamoose";
+import mongoose from "mongoose";
 
+const { Schema, model } = mongoose;
+
+// Transaction Schema
 const transactionSchema = new Schema(
   {
     userId: {
       type: String,
-      hashKey: true,
       required: true,
+      index: true, // Mongoose uses `index` for optimized queries
     },
     transactionId: {
       type: String,
-      rangeKey: true,
       required: true,
+      unique: true, // Equivalent to `rangeKey` for uniqueness
     },
     dateTime: {
       type: String,
@@ -19,23 +22,22 @@ const transactionSchema = new Schema(
     courseId: {
       type: String,
       required: true,
-      index: {
-        name: "CourseTransactionsIndex",
-        type: "global",
-      },
+      index: true, // Global index in DynamoDB translates to `index` for queries in Mongoose
     },
     paymentProvider: {
       type: String,
       enum: ["stripe"],
       required: true,
     },
-    amount: Number,
+    amount: {
+      type: Number,
+    },
   },
   {
-    saveUnknown: true,
-    timestamps: true,
+    timestamps: true, // Adds `createdAt` and `updatedAt` fields
   }
 );
 
+// Create and export the Transaction model
 const Transaction = model("Transaction", transactionSchema);
 export default Transaction;

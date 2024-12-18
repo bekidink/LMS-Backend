@@ -1,16 +1,21 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const dynamoose_1 = require("dynamoose");
-const transactionSchema = new dynamoose_1.Schema({
+const mongoose_1 = __importDefault(require("mongoose"));
+const { Schema, model } = mongoose_1.default;
+// Transaction Schema
+const transactionSchema = new Schema({
     userId: {
         type: String,
-        hashKey: true,
         required: true,
+        index: true, // Mongoose uses `index` for optimized queries
     },
     transactionId: {
         type: String,
-        rangeKey: true,
         required: true,
+        unique: true, // Equivalent to `rangeKey` for uniqueness
     },
     dateTime: {
         type: String,
@@ -19,20 +24,19 @@ const transactionSchema = new dynamoose_1.Schema({
     courseId: {
         type: String,
         required: true,
-        index: {
-            name: "CourseTransactionsIndex",
-            type: "global",
-        },
+        index: true, // Global index in DynamoDB translates to `index` for queries in Mongoose
     },
     paymentProvider: {
         type: String,
         enum: ["stripe"],
         required: true,
     },
-    amount: Number,
+    amount: {
+        type: Number,
+    },
 }, {
-    saveUnknown: true,
-    timestamps: true,
+    timestamps: true, // Adds `createdAt` and `updatedAt` fields
 });
-const Transaction = (0, dynamoose_1.model)("Transaction", transactionSchema);
+// Create and export the Transaction model
+const Transaction = model("Transaction", transactionSchema);
 exports.default = Transaction;

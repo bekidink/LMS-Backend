@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.calculateOverallProgress = exports.mergeChapters = exports.mergeSections = exports.handleAdvancedVideoUpload = exports.getContentType = exports.validateUploadedFiles = exports.updateCourseVideoInfo = void 0;
 const path_1 = __importDefault(require("path"));
+const mongoose_1 = __importDefault(require("mongoose"));
 const updateCourseVideoInfo = (course, sectionId, chapterId, videoUrl) => {
     var _a, _b;
     const section = (_a = course.sections) === null || _a === void 0 ? void 0 : _a.find((s) => s.sectionId === sectionId);
@@ -87,23 +88,26 @@ const handleAdvancedVideoUpload = (s3, files, uniqueId, bucketName) => __awaiter
 });
 exports.handleAdvancedVideoUpload = handleAdvancedVideoUpload;
 const mergeSections = (existingSections, newSections) => {
-    const existingSectionsMap = new Map();
-    for (const existingSection of existingSections) {
-        existingSectionsMap.set(existingSection.sectionId, existingSection);
-    }
-    for (const newSection of newSections) {
-        const section = existingSectionsMap.get(newSection.sectionId);
-        if (!section) {
-            // Add new section
-            existingSectionsMap.set(newSection.sectionId, newSection);
+    // If existingSections is a Mongoose DocumentArray, convert it to a plain array
+    const existingSectionsArray = existingSections instanceof mongoose_1.default.Types.Array
+        ? existingSections.map((doc) => doc.toObject()) // Convert to plain object
+        : existingSections;
+    const sections = existingSectionsArray.map((existingSection) => {
+        const matchingNewSection = newSections.find((newSection) => newSection.sectionId === existingSection.sectionId);
+        if (matchingNewSection) {
+            // Merge chapters from the matching section
+            existingSection.chapters = matchingNewSection.chapters;
         }
-        else {
-            // Merge chapters within the existing section
-            section.chapters = (0, exports.mergeChapters)(section.chapters, newSection.chapters);
-            existingSectionsMap.set(newSection.sectionId, section);
+        return existingSection;
+    });
+    // Add new sections that do not exist in existingSections
+    newSections.forEach((newSection) => {
+        const exists = existingSectionsArray.some((section) => section.sectionId === newSection.sectionId);
+        if (!exists) {
+            sections.push(newSection); // Add new section
         }
-    }
-    return Array.from(existingSectionsMap.values());
+    });
+    return sections;
 };
 exports.mergeSections = mergeSections;
 const mergeChapters = (existingChapters, newChapters) => {

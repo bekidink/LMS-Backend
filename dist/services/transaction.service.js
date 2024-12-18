@@ -12,37 +12,32 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createTransaction = exports.createStripePaymentIntent = exports.listTransactions = void 0;
+exports.createTransactionService = exports.createStripePaymentIntentService = exports.listTransactionsService = void 0;
 const stripe_1 = __importDefault(require("stripe"));
-const dotenv_1 = __importDefault(require("dotenv"));
 const courseModel_1 = __importDefault(require("../models/courseModel"));
 const transactionModel_1 = __importDefault(require("../models/transactionModel"));
 const userCourseProgressModel_1 = __importDefault(require("../models/userCourseProgressModel"));
+const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 if (!process.env.STRIPE_SECRET_KEY) {
-    throw new Error("STRIPE_SECRET_KEY os required but was not found in env variables");
+    throw new Error("STRIPE_SECRET_KEY is required but was not found in env variables");
 }
 const stripe = new stripe_1.default(process.env.STRIPE_SECRET_KEY);
-const listTransactions = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { userId } = req.query;
+// Service to list transactions, optionally filtered by userId
+const listTransactionsService = (userId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const transactions = userId
-            ? yield transactionModel_1.default.query("userId").eq(userId).exec()
-            : yield transactionModel_1.default.scan().exec();
-        res.json({
-            message: "Transactions retrieved successfully",
-            data: transactions,
-        });
+        const query = userId ? { userId } : {};
+        return yield transactionModel_1.default.find(query).exec();
     }
     catch (error) {
-        res.status(500).json({ message: "Error retrieving transactions", error });
+        throw new Error(`Error retrieving transactions: ${error.message}`);
     }
 });
-exports.listTransactions = listTransactions;
-const createStripePaymentIntent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    let { amount } = req.body;
+exports.listTransactionsService = listTransactionsService;
+// Service to create a Stripe PaymentIntent
+const createStripePaymentIntentService = (amount) => __awaiter(void 0, void 0, void 0, function* () {
     if (!amount || amount <= 0) {
-        amount = 50;
+        amount = 50; // default value
     }
     try {
         const paymentIntent = yield stripe.paymentIntents.create({
@@ -53,26 +48,22 @@ const createStripePaymentIntent = (req, res) => __awaiter(void 0, void 0, void 0
                 allow_redirects: "never",
             },
         });
-        res.json({
-            message: "",
-            data: {
-                clientSecret: paymentIntent.client_secret,
-            },
-        });
+        return paymentIntent.client_secret;
     }
     catch (error) {
-        res
-            .status(500)
-            .json({ message: "Error creating stripe payment intent", error });
+        throw new Error(`Error creating Stripe payment intent: ${error.message}`);
     }
 });
-exports.createStripePaymentIntent = createStripePaymentIntent;
-const createTransaction = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { userId, courseId, transactionId, amount, paymentProvider } = req.body;
+exports.createStripePaymentIntentService = createStripePaymentIntentService;
+// Service to create a transaction and associated course progress
+const createTransactionService = (userId, courseId, transactionId, amount, paymentProvider) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        // 1. get course info
-        const course = yield courseModel_1.default.get(courseId);
-        // 2. create transaction record
+        // 1. Get course information
+        const course = yield courseModel_1.default.findById(courseId);
+        if (!course) {
+            throw new Error("Course not found");
+        }
+        // 2. Create transaction record using Mongoose
         const newTransaction = new transactionModel_1.default({
             dateTime: new Date().toISOString(),
             userId,
@@ -82,7 +73,7 @@ const createTransaction = (req, res) => __awaiter(void 0, void 0, void 0, functi
             paymentProvider,
         });
         yield newTransaction.save();
-        // 3. create initial course progress
+        // 3. Create initial course progress record
         const initialProgress = new userCourseProgressModel_1.default({
             userId,
             courseId,
@@ -98,24 +89,13 @@ const createTransaction = (req, res) => __awaiter(void 0, void 0, void 0, functi
             lastAccessedTimestamp: new Date().toISOString(),
         });
         yield initialProgress.save();
-        // 4. add enrollment to relevant course
-        yield courseModel_1.default.update({ courseId }, {
-            $ADD: {
-                enrollments: [{ userId }],
-            },
-        });
-        res.json({
-            message: "Purchased Course successfully",
-            data: {
-                transaction: newTransaction,
-                courseProgress: initialProgress,
-            },
-        });
+        // 4. Add the user to the course's enrollments using Mongoose
+        course.enrollments.push({ userId });
+        yield course.save();
+        return { newTransaction, initialProgress };
     }
     catch (error) {
-        res
-            .status(500)
-            .json({ message: "Error creating transaction and enrollment", error });
+        throw new Error(`Error creating transaction and enrollment: ${error.message}`);
     }
 });
-exports.createTransaction = createTransaction;
+exports.createTransactionService = createTransactionService;

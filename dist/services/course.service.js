@@ -12,33 +12,36 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getCourse = exports.listCourses = void 0;
+exports.getCourseService = exports.listCoursesService = void 0;
 const courseModel_1 = __importDefault(require("../models/courseModel"));
-const listCourses = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { category } = req.query;
+// Service to list courses with optional category filter
+const listCoursesService = (category) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const courses = category && category !== "all"
-            ? yield courseModel_1.default.scan("category").eq(category).exec()
-            : yield courseModel_1.default.scan().exec();
-        res.json({ message: "Course retrieved successfully", data: courses });
-    }
-    catch (error) {
-        res.status(500).json({ message: "Error retrieving courses", error });
-    }
-});
-exports.listCourses = listCourses;
-const getCourse = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { courseId } = req.params;
-    try {
-        const course = courseModel_1.default.get(courseId);
-        if (!course) {
-            res.status(404).json({ message: "Course not found" });
-            return;
+        if (category && category !== "all") {
+            // Filter courses by category if provided
+            return yield courseModel_1.default.find({ category });
         }
-        res.json({ message: "Course retrieved successfully", data: course });
+        else {
+            // Retrieve all courses if no category filter is provided
+            return yield courseModel_1.default.find();
+        }
     }
     catch (error) {
-        res.status(500).json({ message: "Error retrieving courses", error });
+        throw new Error(`Error retrieving courses: ${error.message}`);
     }
 });
-exports.getCourse = getCourse;
+exports.listCoursesService = listCoursesService;
+// Service to get a course by its ID
+const getCourseService = (courseId) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const course = yield courseModel_1.default.findOne({ courseId });
+        if (!course) {
+            throw new Error("Course not found");
+        }
+        return course;
+    }
+    catch (error) {
+        throw new Error(`Error retrieving course: ${error.message}`);
+    }
+});
+exports.getCourseService = getCourseService;
