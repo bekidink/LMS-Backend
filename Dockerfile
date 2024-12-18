@@ -4,20 +4,20 @@ FROM node:18-alpine
 # Set the working directory in the container
 WORKDIR /app
 
-# Copy package.json and package-lock.json to the container
+# Copy package.json and package-lock.json
 COPY package*.json ./
 
 # Install dependencies
 RUN npm install
 
-# Copy the source code into the container
+# Copy the rest of the application code
 COPY . .
 
-# Build the TypeScript project
-RUN npm run build
+# Build the TypeScript code using npx to avoid permission issues
+RUN npx tsc
 
 # Expose the application port
 EXPOSE 3000
 
-# Set the command to run the app
+# Command to run the application
 CMD ["npm", "start"]
