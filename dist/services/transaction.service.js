@@ -19,9 +19,6 @@ const transactionModel_1 = __importDefault(require("../models/transactionModel")
 const userCourseProgressModel_1 = __importDefault(require("../models/userCourseProgressModel"));
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
-if (!process.env.STRIPE_SECRET_KEY) {
-    throw new Error("STRIPE_SECRET_KEY is required but was not found in env variables");
-}
 const stripe = new stripe_1.default(process.env.STRIPE_SECRET_KEY);
 // Service to list transactions, optionally filtered by userId
 const listTransactionsService = (userId) => __awaiter(void 0, void 0, void 0, function* () {

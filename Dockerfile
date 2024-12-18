@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install --unsafe-perm
 
-# Ensure the correct permissions for node modules
+# Fix permissions for node_modules/.bin
 RUN chmod -R 755 /app/node_modules/.bin
 
 # Copy the rest of the application files

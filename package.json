@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "rimraf dist && npx tsc ",
+     "build": "node -e \"const fs = require('fs'); fs.rmSync('dist', { recursive: true, force: true });\" && npx tsc",
     "start": "npm run build && node dist/index.js",
     "dev": "npm run build && concurrently \"npx tsc -w\" \" nodemon --exec ts-node src/index.ts\" ",
     "seed": "ts-node src/seed/seedDynamodb.ts"
