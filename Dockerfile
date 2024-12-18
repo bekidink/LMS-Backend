@@ -9,7 +9,7 @@ COPY package*.json ./
 RUN npm install --unsafe-perm
 
 # Fix permissions for node_modules/.bin
-RUN chmod -R 755 /app/node_modules/.bin
+RUN  chmod -R a+x /app/node_modules
 
 # Copy the rest of the application files
 COPY . .
