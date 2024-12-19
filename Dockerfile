@@ -20,4 +20,4 @@ RUN npm run build
 EXPOSE 3000
 
 # Command to start the app (ensure that the server.js is inside the build directory)
-CMD ["node", "build/server.js"]
+CMD ["node", "build/index.js"]
