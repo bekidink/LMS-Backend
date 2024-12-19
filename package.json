@@ -2,12 +2,12 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
-  "main": "build/server.js",
+  "main": "build/index.js",
   
   
   "scripts": {
     "build": "tsc",
-    "start": "node build/server.js"
+    "start": "node build/index.js"
   },
   "keywords": [],
   "author": "",
