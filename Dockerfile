@@ -1,24 +1,23 @@
-# Use an official Node.js runtime as a parent image
-FROM node:18-alpine
+# Use an official Node.js image as the base image
+FROM node:16-alpine
 
-# Set the working directory in the container
+# Set the working directory inside the container
 WORKDIR /app
 
-# Copy package.json and package-lock.json
-COPY package*.json ./
+# Copy package.json and package-lock.json (or yarn.lock) to the container
+COPY package.json package-lock.json ./
 
-# Install dependencies
-RUN npm install
-RUN chmod +x ./node_modules/.bin/tsc
+# Install dependencies, including dev dependencies for TypeScript types
+RUN npm install --include=dev
 
-# Copy the rest of the application code
+# Copy the source code into the container
 COPY . .
 
-# Build the TypeScript code using npx to avoid permission issues
-RUN npx tsc
+# Compile TypeScript into the build directory
+RUN npm run build
 
-# Expose the application port
+# Expose the port that the app will run on
 EXPOSE 3000
 
-# Command to run the application
-CMD ["npm", "start"]
+# Command to start the app (ensure that the server.js is inside the build directory)
+CMD ["node", "build/server.js"]
